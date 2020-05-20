@@ -207,7 +207,7 @@ module.exports = function normalizeComponent (
     format: 'MM/yyyy',
     fullFormat: 'dd/MM/yyyy',
     dayEventsTitle: 'All Events',
-    notHaveEvents: 'Not Have Events'
+    notHaveEvents: 'No Events!'
   },
   zh: {
     dayNames: ["日", "一", "二", "三", "四", "五", "六"],
@@ -223,7 +223,7 @@ module.exports = function normalizeComponent (
     format: 'MM/yyyy',
     fullFormat: 'MM/dd/yyyy',
     dayEventsTitle: 'All Events',
-    notHaveEvents: 'Not Have Events'
+    notHaveEvents: 'No Events!'
   },
   es: {
     dayNames: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"],
@@ -468,7 +468,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__tools_js__["b" /* dateTimeFormatter */])(tempDate, __WEBPACK_IMPORTED_MODULE_0__i18n_js__["a" /* default */][this.locale].fullFormat);
         } else {
           tempDate = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__tools_js__["b" /* dateTimeFormatter */])(Date.parse(new Date(this.dayEvents.date)), __WEBPACK_IMPORTED_MODULE_0__i18n_js__["a" /* default */][this.locale].fullFormat);
-          return tempDate + ' ' + __WEBPACK_IMPORTED_MODULE_0__i18n_js__["a" /* default */][this.locale].notHaveEvents;
+          return tempDate + '<br>' + __WEBPACK_IMPORTED_MODULE_0__i18n_js__["a" /* default */][this.locale].notHaveEvents;
         }
       } else {
         return __WEBPACK_IMPORTED_MODULE_0__i18n_js__["a" /* default */][this.locale].dayEventsTitle;
@@ -677,8 +677,8 @@ var inBrowser = typeof window !== 'undefined';
   data: function data() {
     return {
       selectedDayEvents: {
-        date: 'all',
-        events: this.events || [] //default show all event
+        date: new Date().toJSON().slice(0, 10).replace(/-/g, '/'),
+        events: [] //default. no events
       }
     };
   },
@@ -736,9 +736,11 @@ var inBrowser = typeof window !== 'undefined';
     }
   },
   created: function created() {
-    if (this.calendarParams.curEventsDate !== 'all') {
-      this.handleChangeCurDay(this.calendarParams.curEventsDate);
-    }
+    //if (this.calendarParams.curEventsDate !== 'all') {
+    //  this.handleChangeCurDay(this.calendarParams.curEventsDate);
+    //}
+    var dateObj = new Date();
+    this.handleChangeCurDay(dateObj.getFullYear() + '/' + (dateObj.getMonth() + 1) + '/' + dateObj.getDate());
   },
 
   methods: {
@@ -811,7 +813,7 @@ function install(Vue) {
   var dateObj = new Date();
   var DEFAULT_OPTION = {
     locale: 'zh', // en
-    color: ' #f29543',
+    color: ' #3f51b5', //#f29543',
     className: 'selected-day',
     weekStartOn: 0 // 0 mean sunday
   };
@@ -962,10 +964,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('h3', {
     staticClass: "title"
   }, [_vm._v(_vm._s(_vm.index + 1) + ". " + _vm._s(_vm.event.title))]), _vm._v(" "), _c('p', {
-    staticClass: "time"
-  }, [_vm._v(_vm._s(_vm.dateTimeFormatter(Date.parse(new Date(_vm.event.date)), _vm.i18n[_vm.locale].fullFormat)))]), _vm._v(" "), _c('p', {
-    staticClass: "desc"
-  }, [_vm._v(_vm._s(_vm.event.desc))])])
+    staticClass: "desc",
+    domProps: {
+      "innerHTML": _vm._s(_vm.event.desc)
+    }
+  })])
 },staticRenderFns: []}
 
 /***/ }),
@@ -977,8 +980,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "events-wrapper",
     style: (_vm.bgColor)
   }, [_c('h2', {
-    staticClass: "date"
-  }, [_vm._v("\n    " + _vm._s(_vm.dayEventsTitle) + "\n  ")]), _vm._v(" "), _c('div', {
+    staticClass: "date",
+    domProps: {
+      "innerHTML": _vm._s(_vm.dayEventsTitle)
+    }
+  }), _vm._v(" "), _c('div', {
     staticClass: "cal-events"
   }, [_vm._t("default", _vm._l((_vm.events), function(event, index) {
     return _c('div', {
